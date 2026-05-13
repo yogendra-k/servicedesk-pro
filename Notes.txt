@@ -1,0 +1,1 @@
+⚖️ Trade-off: We're using a named Docker volume (sqlserver_data) instead of a bind mount. This means your database data persists across docker compose down and up cycles. If you used docker compose down -v it would wipe it — useful when you want a clean slate, dangerous if you forget the -v flag.
