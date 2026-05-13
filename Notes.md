@@ -67,3 +67,37 @@ Program.cs — wires everything together
 
 
 Depends on Application and Infrastructure. Controllers should be so thin you could swap them for a CLI or gRPC with minimal effort.
+
+## Step 3 - Add to solution 
+dotnet sln add src/ServiceDesk.API/ServiceDesk.API.csproj
+dotnet sln add src/ServiceDesk.Domain/ServiceDesk.Domain.csproj
+dotnet sln add src/ServiceDesk.Application/ServiceDesk.Application.csproj
+dotnet sln add src/ServiceDesk.Infrastructure/ServiceDesk.Infrastructure.csproj
+dotnet sln add tests/ServiceDesk.Tests/ServiceDesk.Tests.csproj
+
+## step 4 - Wire Project References 
+# Application → Domain
+dotnet add src/ServiceDesk.Application/ServiceDesk.Application.csproj reference \
+  src/ServiceDesk.Domain/ServiceDesk.Domain.csproj
+
+# Infrastructure → Application + Domain
+dotnet add src/ServiceDesk.Infrastructure/ServiceDesk.Infrastructure.csproj reference \
+  src/ServiceDesk.Application/ServiceDesk.Application.csproj
+dotnet add src/ServiceDesk.Infrastructure/ServiceDesk.Infrastructure.csproj reference \
+  src/ServiceDesk.Domain/ServiceDesk.Domain.csproj
+
+# API → Application + Infrastructure
+dotnet add src/ServiceDesk.API/ServiceDesk.API.csproj reference \
+  src/ServiceDesk.Application/ServiceDesk.Application.csproj
+dotnet add src/ServiceDesk.API/ServiceDesk.API.csproj reference \
+  src/ServiceDesk.Infrastructure/ServiceDesk.Infrastructure.csproj
+
+# Tests → all four
+dotnet add tests/ServiceDesk.Tests/ServiceDesk.Tests.csproj reference \
+  src/ServiceDesk.API/ServiceDesk.API.csproj
+dotnet add tests/ServiceDesk.Tests/ServiceDesk.Tests.csproj reference \
+  src/ServiceDesk.Application/ServiceDesk.Application.csproj
+dotnet add tests/ServiceDesk.Tests/ServiceDesk.Tests.csproj reference \
+  src/ServiceDesk.Domain/ServiceDesk.Domain.csproj
+dotnet add tests/ServiceDesk.Tests/ServiceDesk.Tests.csproj reference \
+  src/ServiceDesk.Infrastructure/ServiceDesk.Infrastructure.csproj
